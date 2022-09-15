@@ -1,0 +1,62 @@
+// C++ code
+//
+int in,out,count=0;
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(A0,INPUT_PULLUP);
+  pinMode(A1,INPUT);
+  pinMode(9,OUTPUT);
+  pinMode(8,OUTPUT);
+  pinMode(10,OUTPUT);
+  pinMode(2,INPUT);
+  digitalWrite(9,LOW);
+}
+
+void loop()
+{
+
+  float LDR =map(analogRead(A0),54,975,255,0);
+  int temp=map(analogRead(A1),20,358,-40,125);
+  in=digitalRead(2);
+  out=digitalRead(3);
+  //Serial.print("Brightness: ");
+  //Serial.print(percent);
+  if(analogRead(A0)<900){
+    digitalWrite(9,HIGH);
+    Serial.println("Light 1 ON");
+  }
+  else{
+    digitalWrite(9,LOW);
+    Serial.println("Light 1 OFF");
+  }
+  if(in==1){
+  count++;
+  }
+  else if(count!=0&&out==1){
+    count--;
+  }
+  Serial.print("Person Count: ");
+  Serial.println(count);
+  if(count>=1&&count<=4){
+  digitalWrite(8,HIGH);
+    Serial.println("FAN 1 ON");
+    Serial.println("FAN 2 OFF");
+  }
+  else if(count>=4||temp>29){
+  digitalWrite(8,HIGH);
+    Serial.println("FAN 1 ON");
+    digitalWrite(10,HIGH);
+    Serial.println("FAN 2 ON");
+  }
+  else{
+  digitalWrite(8,LOW);
+    digitalWrite(10,LOW);
+  Serial.println("FAN 1 OFF");
+    Serial.println("FAN 2 OFF");
+  }
+  delay(1000);
+  Serial.print("Temperature: ");
+  Serial.print(temp);
+  Serial.println("^C");
+}
